@@ -1,0 +1,47 @@
+stages:
+
+  prepare_data:
+    cmd: python scripts/train.py --prepare
+    deps:
+      - data/diabetes.csv
+      - scripts/train.py
+      - src/
+    outs:
+      - models/scaler/scaler.pkl
+
+  train_models:
+    cmd: python scripts/train.py --train
+    deps:
+      - models/scaler/scaler.pkl
+      - scripts/train.py
+      - src/
+      - config/config.yaml
+    params:
+      - config/config.yaml:
+          - algorithms
+          - model
+          - evaluation
+    outs:
+      - models/trained/best_model.pkl
+    metrics:
+      - models/metrics/metrics_comparison.json:
+          cache: false
+
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+      - models/trained/best_model.pkl
+      - models/scaler/scaler.pkl
+      - data/diabetes.csv
+      - scripts/evaluate.py
+    outs:
+      - models/metrics/confusion_matrix.json
+    metrics:
+      - models/metrics/evaluation_report.json:
+          cache: false
+
+plots:
+  - models/metrics/metrics_comparison.json:
+      title: "Model Comparison"
+      x: model_name
+      y: f1_score

@@ -1,0 +1,67 @@
+# Configuration for Diabetes ML Project
+
+experiment_name: "diabetes-prediction"
+random_state: 42
+
+# Data configuration
+data:
+  test_size: 0.2
+  scaling: true
+  feature_scaling: "StandardScaler"
+
+# Cross-validation
+cv:
+  n_splits: 5
+  strategy: "StratifiedKFold"
+
+# Paths
+paths:
+  data: "data"
+  models: "models"
+  logs: "logs"
+  artifacts: "mlruns"
+
+# Algorithms to train
+algorithms:
+  - logistic_regression
+  - random_forest
+  - gradient_boosting
+  - xgboost
+  - lightgbm
+  - svm
+
+# Model parameters
+model:
+  random_forest:
+    n_estimators: 100
+    max_depth: 15
+  
+  xgboost:
+    n_estimators: 100
+    learning_rate: 0.1
+  
+  lightgbm:
+    n_estimators: 100
+    learning_rate: 0.1
+
+# Evaluation
+evaluation:
+  primary_metric: "f1_score"
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+    - roc_auc
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/training.log"
+
+# AWS Configuration (update with your values)
+aws:
+  region: "us-east-1"
+  bucket: "diabetes-ml-models"
+  role_arn: "arn:aws:iam::YOUR_ACCOUNT_ID:role/SageMakerRole"

@@ -1,0 +1,107 @@
+schema: '2.0'
+stages:
+  prepare_data:
+    cmd: python scripts/train.py --prepare
+    deps:
+    - path: data/diabetes.csv
+      hash: md5
+      md5: f2906818eda8fcfc8f8416557ab1e6df
+      size: 23873
+    - path: scripts/train.py
+      hash: md5
+      md5: 8b88a17b28693ccc27bf3f9e4203d9bc
+      size: 5519
+    - path: src/
+      hash: md5
+      md5: 0275c6e1a75290b72571bf710d643e82.dir
+      size: 13663
+      nfiles: 16
+    outs:
+    - path: models/scaler/scaler.pkl
+      hash: md5
+      md5: 549f6c648a95a3477df8900cf8544f5a
+      size: 800
+  train_models:
+    cmd: python scripts/train.py --train
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 6a28b6dd7f726379bcfac5fecb6774e2
+      size: 1186
+    - path: models/scaler/scaler.pkl
+      hash: md5
+      md5: 549f6c648a95a3477df8900cf8544f5a
+      size: 800
+    - path: scripts/train.py
+      hash: md5
+      md5: 8b88a17b28693ccc27bf3f9e4203d9bc
+      size: 5519
+    - path: src/
+      hash: md5
+      md5: 0275c6e1a75290b72571bf710d643e82.dir
+      size: 13663
+      nfiles: 16
+    params:
+      config/config.yaml:
+        algorithms:
+        - logistic_regression
+        - random_forest
+        - gradient_boosting
+        - xgboost
+        - lightgbm
+        - svm
+        evaluation:
+          primary_metric: f1_score
+          metrics:
+          - accuracy
+          - precision
+          - recall
+          - f1_score
+          - roc_auc
+        model:
+          random_forest:
+            n_estimators: 100
+            max_depth: 15
+          xgboost:
+            n_estimators: 100
+            learning_rate: 0.1
+          lightgbm:
+            n_estimators: 100
+            learning_rate: 0.1
+    outs:
+    - path: models/metrics/metrics_comparison.json
+      hash: md5
+      md5: 137ccc75ae8272427222800ba6ebf77c
+      size: 1343
+    - path: models/trained/best_model.pkl
+      hash: md5
+      md5: 9b9ecfaaf9e2986bfa7e837a5963f012
+      size: 30885
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: data/diabetes.csv
+      hash: md5
+      md5: f2906818eda8fcfc8f8416557ab1e6df
+      size: 23873
+    - path: models/scaler/scaler.pkl
+      hash: md5
+      md5: 549f6c648a95a3477df8900cf8544f5a
+      size: 800
+    - path: models/trained/best_model.pkl
+      hash: md5
+      md5: 9b9ecfaaf9e2986bfa7e837a5963f012
+      size: 30885
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: 306c756e2297beb30ee685ae80fa906e
+      size: 8128
+    outs:
+    - path: models/metrics/confusion_matrix.json
+      hash: md5
+      md5: 6933dcfcc3ae2eac054ac3188d44b54f
+      size: 107
+    - path: models/metrics/evaluation_report.json
+      hash: md5
+      md5: f988f821722f6f618ac94c672fbf3177
+      size: 703

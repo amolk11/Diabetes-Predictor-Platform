@@ -1,0 +1,23 @@
+{
+  "metrics": {
+    "accuracy": 0.8190104166666666,
+    "precision": 0.7918552036199095,
+    "recall": 0.6529850746268657,
+    "f1_score": 0.7157464212678937,
+    "roc_auc": 0.883223880597015,
+    "matthews_cc": 0.5906278287899913,
+    "cohen_kappa": 0.5847776705977534,
+    "specificity": 0.908,
+    "sensitivity": 0.6529850746268657,
+    "evaluation_timestamp": "2026-04-12T18:27:12.975005",
+    "samples_evaluated": 768,
+    "confusion_matrix": {
+      "true_negatives": 454,
+      "false_positives": 46,
+      "false_negatives": 93,
+      "true_positives": 175
+    }
+  },
+  "evaluation_date": "2026-04-12T18:27:12.984501",
+  "model_location": "models/trained/best_model.pkl"
+}

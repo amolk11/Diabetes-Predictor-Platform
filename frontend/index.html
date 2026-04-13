@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Health Guardian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 to-purple-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-xl">
+
+    <h1 class="text-3xl font-bold text-center text-indigo-600 mb-6">
+        Diabetes Prediction
+    </h1>
+
+    <form id="healthForm" class="space-y-4">
+
+        <input name="Pregnancies" type="number" min="0" max="20" placeholder="Pregnancies" class="w-full p-3 border rounded-lg" required>
+        <input name="Glucose" type="number" min="0" max="300" placeholder="Glucose" class="w-full p-3 border rounded-lg" required>
+        <input name="BloodPressure" type="number" min="0" max="200" placeholder="Blood Pressure" class="w-full p-3 border rounded-lg" required>
+        <input name="SkinThickness" type="number" min="0" max="100" placeholder="Skin Thickness" class="w-full p-3 border rounded-lg" required>
+        <input name="Insulin" type="number" min="0" max="900" placeholder="Insulin" class="w-full p-3 border rounded-lg" required>
+        <input name="BMI" type="number" step="0.1" min="10" max="70" placeholder="BMI" class="w-full p-3 border rounded-lg" required>
+        <input name="DiabetesPedigreeFunction" type="number" step="0.001" min="0" max="3" placeholder="DPF" class="w-full p-3 border rounded-lg" required>
+        <input name="Age" type="number" min="1" max="120" placeholder="Age" class="w-full p-3 border rounded-lg" required>
+
+        <button id="predictBtn" type="submit"
+            class="w-full bg-indigo-600 text-white p-3 rounded-lg font-bold hover:bg-indigo-700">
+            Analyze My Health
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+document.getElementById("healthForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById("predictBtn");
+    btn.innerText = "Analyzing...";
+    btn.disabled = true;
+
+    const formData = new FormData(this);
+
+    const data = {
+        Pregnancies: Number(formData.get("Pregnancies")),
+        Glucose: Number(formData.get("Glucose")),
+        BloodPressure: Number(formData.get("BloodPressure")),
+        SkinThickness: Number(formData.get("SkinThickness")),
+        Insulin: Number(formData.get("Insulin")),
+        BMI: Number(formData.get("BMI")),
+        DiabetesPedigreeFunction: Number(formData.get("DiabetesPedigreeFunction")),
+        Age: Number(formData.get("Age"))
+    };
+
+    try {
+        const response = await fetch("https://diabetes-api-olmt.onrender.com/predict", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        localStorage.setItem("prediction_result", JSON.stringify(result));
+        window.location.href = "result.html";
+
+    } catch (err) {
+        alert("API Error");
+        btn.innerText = "Analyze My Health";
+        btn.disabled = false;
+    }
+});
+</script>
+
+</body>
+</html>

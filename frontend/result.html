@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-green-100 to-blue-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-10 rounded-2xl shadow-xl text-center w-full max-w-lg">
+
+    <h1 class="text-3xl font-bold mb-6 text-indigo-600">Prediction Result</h1>
+
+    <div id="resultBox"></div>
+
+    <a href="index.html" class="mt-6 inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg">
+        Try Again
+    </a>
+
+</div>
+
+<script>
+const result = JSON.parse(localStorage.getItem("prediction_result"));
+
+if (result) {
+    const prediction = result.prediction;
+    const probability = result.probability;
+
+    let html = "";
+
+    if (prediction == 1) {
+        html = `
+            <h2 class="text-2xl text-red-600 font-bold">⚠️ High Risk</h2>
+            <p class="mt-4">Probability: ${(probability * 100).toFixed(2)}%</p>
+        `;
+    } else {
+        html = `
+            <h2 class="text-2xl text-green-600 font-bold">✅ Low Risk</h2>
+            <p class="mt-4">Probability: ${(probability * 100).toFixed(2)}%</p>
+        `;
+    }
+
+    document.getElementById("resultBox").innerHTML = html;
+}
+</script>
+
+</body>
+</html>
